@@ -85,6 +85,27 @@ jobs:
           pytest==8.0.0
           EOF
 
+      - name: List created files
+        run: |
+          echo "Current location:"
+          pwd
+
+          echo ""
+          echo "List root directory:"
+          ls -alrt
+
+          echo ""
+          echo "List app directory:"
+          ls -alrt app
+
+          echo ""
+          echo "List tests directory:"
+          ls -alrt tests
+
+          echo ""
+          echo "Show requirements.txt:"
+          ls -alrt requirements.txt
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
