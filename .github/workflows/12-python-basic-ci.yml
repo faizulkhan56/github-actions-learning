@@ -1,10 +1,6 @@
 name: Python Basic CI
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -12,6 +8,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Print important default GitHub Actions variables
+        run: |
+          echo "===== GitHub workspace and repo ====="
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          echo "GITHUB_REPOSITORY=$GITHUB_REPOSITORY"
+          echo "GITHUB_REPOSITORY_OWNER=$GITHUB_REPOSITORY_OWNER"
+
+          echo ""
+          echo "===== Git ref and commit ====="
+          echo "GITHUB_REF=$GITHUB_REF"
+          echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
+          echo "GITHUB_REF_TYPE=$GITHUB_REF_TYPE"
+          echo "GITHUB_SHA=$GITHUB_SHA"
+
+          echo ""
+          echo "===== Workflow trigger info ====="
+          echo "GITHUB_ACTOR=$GITHUB_ACTOR"
+          echo "GITHUB_TRIGGERING_ACTOR=$GITHUB_TRIGGERING_ACTOR"
+          echo "GITHUB_EVENT_NAME=$GITHUB_EVENT_NAME"
+
+          echo ""
+          echo "===== Workflow run info ====="
+          echo "GITHUB_RUN_ID=$GITHUB_RUN_ID"
+          echo "GITHUB_RUN_NUMBER=$GITHUB_RUN_NUMBER"
+          echo "GITHUB_RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"
+          echo "GITHUB_JOB=$GITHUB_JOB"
+          echo "GITHUB_ACTIONS=$GITHUB_ACTIONS"
+
+          echo ""
+          echo "===== Runner info ====="
+          echo "RUNNER_OS=$RUNNER_OS"
+          echo "RUNNER_ARCH=$RUNNER_ARCH"
+          echo "RUNNER_NAME=$RUNNER_NAME"
+          echo "RUNNER_TEMP=$RUNNER_TEMP"
+          echo "RUNNER_TOOL_CACHE=$RUNNER_TOOL_CACHE"
+
+          echo ""
+          echo "===== Shell/runtime info ====="
+          echo "CI=$CI"
+          echo "Current directory:"
+          pwd
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -20,10 +57,12 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Create sample Python app and test (for demo)
+      - name: Create sample Python app and test
         run: |
           mkdir -p app tests
+
           touch app/__init__.py
+
           cat > app/math_utils.py << 'EOF'
           def add(a, b):
               return a + b
@@ -31,6 +70,7 @@ jobs:
           def subtract(a, b):
               return a - b
           EOF
+
           cat > tests/test_math_utils.py << 'EOF'
           from app.math_utils import add, subtract
 
@@ -40,6 +80,7 @@ jobs:
           def test_subtract():
               assert subtract(5, 3) == 2
           EOF
+
           cat > requirements.txt << 'EOF'
           pytest==8.0.0
           EOF
@@ -50,4 +91,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests with pytest
-        run: pytest tests/ -v
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          pytest tests/ -v
