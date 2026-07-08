@@ -5,16 +5,17 @@ on:
 
 jobs:
   matrix-test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
-      # fail-fast: false = continue other matrix jobs even if one fails
+      # Continue running other jobs even if one fails
       fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-        os-label: [ubuntu-latest]
 
-    name: Python ${{ matrix.python-version }} on ${{ matrix.os-label }}
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+
+    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
 
     steps:
       - name: Checkout code
@@ -27,7 +28,7 @@ jobs:
 
       - name: Create a simple test script
         run: |
-          echo "print('Hello from Python ${{ matrix.python-version }}')" > hello.py
+          echo "print('Hello from Python ${{ matrix.python-version }} on ${{ matrix.os }}')" > hello.py
 
       - name: Run the script
         run: python hello.py
@@ -35,4 +36,4 @@ jobs:
       - name: Verify Python version
         run: |
           python --version
-          echo "Matrix job for Python ${{ matrix.python-version }} completed."
+          echo "Matrix job for Python ${{ matrix.python-version }} on ${{ matrix.os }} completed."
