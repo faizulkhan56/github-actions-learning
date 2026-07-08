@@ -12,7 +12,7 @@ on:
       - develop
     paths:
       # Only trigger when these paths change (optional filter)
-      - "README.md"
+      - "Readme.md"
 
 jobs:
   on-push:
