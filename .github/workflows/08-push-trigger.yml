@@ -3,7 +3,7 @@
 # How to use: Copy this file to .github/workflows/ in your GitHub repository.
 # Test: Push any commit to main or develop branch.
 
-name: Push Trigger Demo
+name: Push Trigger Demo2
 
 on:
   push:
